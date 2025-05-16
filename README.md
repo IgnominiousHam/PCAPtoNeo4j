@@ -127,8 +127,3 @@ tshark -v
 - Ensure that dependencies are properly installed (see steps 2 and 3).
 
 ---
-
-## 🧾 License
-
-MIT License — free to use, modify, and distribute.
-
