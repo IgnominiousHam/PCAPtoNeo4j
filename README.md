@@ -118,13 +118,13 @@ RETURN d.name AS vendor, count(*) AS mac_count
 
 ## 🛠 Troubleshooting
 
-  Make sure tshark is installed and available in your system’s PATH:
+- Make sure tshark is installed and available in your system’s PATH:
 ```txt
 tshark -v
 ```
-  Confirm that Neo4j is running and matches the URI in your main.py file.
+- Confirm that Neo4j is running and matches the URI in your main.py file.
 
-  Ensure that dependencies are properly installed (see steps 2 and 3).
+- Ensure that dependencies are properly installed (see steps 2 and 3).
 
 ---
 
