@@ -29,7 +29,6 @@ def decode_hex(s):
     return s
 
 def run_tshark(input_pcap, output_csv, fields):
-    """Run tshark with the provided fields and output to CSV."""
     command = ["tshark", "-nr", input_pcap, "-T", "fields"]
     for field in fields:
         command += ["-e", field]
@@ -51,24 +50,29 @@ def decode_ssid_column(input_csv):
          open(output_csv, "w", newline='', encoding="utf-8") as outfile:
 
         reader = csv.DictReader(infile)
+        if not reader.fieldnames or None in reader.fieldnames:
+            raise ValueError("CSV header is malformed or contains invalid field names.")
+
         fieldnames = reader.fieldnames
         writer = csv.DictWriter(outfile, fieldnames=fieldnames)
         writer.writeheader()
 
         for row in reader:
+            if None in row:
+                continue
+
             if "wlan.ssid" in row and row["wlan.ssid"]:
                 row["wlan.ssid"] = decode_hex(row["wlan.ssid"].strip())
-            writer.writerow(row)
+
+            clean_row = {k: row.get(k, "") for k in fieldnames}
+            writer.writerow(clean_row)
 
     os.replace(output_csv, input_csv)
-
-from mac_vendor_lookup import MacLookup
 
 def add_vendor_columns(csv_file):
     """Adds 'wlan.sa.vendor' and 'wlan.da.vendor' columns using mac-vendor-lookup."""
     mac_lookup = MacLookup()
 
-    # Optionally update local database
     try:
         mac_lookup.update_vendors()
     except Exception as e:
@@ -80,28 +84,31 @@ def add_vendor_columns(csv_file):
          open(temp_file, "w", newline='', encoding="utf-8") as outfile:
 
         reader = csv.DictReader(infile)
-        base_fields = reader.fieldnames if reader.fieldnames else []
-        new_fields = ["wlan.sa.vendor", "wlan.da.vendor"]
-        fieldnames = base_fields + [field for field in new_fields if field not in base_fields]
+        if not reader.fieldnames or None in reader.fieldnames:
+            raise ValueError("CSV header is malformed or contains invalid field names.")
 
+        new_fields = ["wlan.sa.vendor", "wlan.da.vendor"]
+        fieldnames = reader.fieldnames + [f for f in new_fields if f not in reader.fieldnames]
         writer = csv.DictWriter(outfile, fieldnames=fieldnames)
         writer.writeheader()
+
         for row in reader:
-            # Lookup wlan.sa
+            if None in row:
+                continue
+
             sa_mac = row.get("wlan.sa", "").strip()
             try:
                 row["wlan.sa.vendor"] = mac_lookup.lookup(sa_mac)
             except Exception:
                 row["wlan.sa.vendor"] = ""
 
-            # Lookup wlan.da
             da_mac = row.get("wlan.da", "").strip()
             try:
                 row["wlan.da.vendor"] = mac_lookup.lookup(da_mac)
             except Exception:
                 row["wlan.da.vendor"] = ""
 
-            writer.writerow(row)
+            clean_row = {k: row.get(k, "") for k in fieldnames}
+            writer.writerow(clean_row)
 
     os.replace(temp_file, csv_file)
-

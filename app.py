@@ -1,5 +1,12 @@
 import gradio as gr
-from workflow import pcap_workflow
+from src.workflow import pcap_workflow
+import sys
+import os
+
+def get_resource_path(filename):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, filename)
+    return filename
 
 theme = gr.themes.Soft(
     primary_hue="blue",
@@ -36,4 +43,4 @@ with gr.Blocks(theme=theme, title="PCAP → Neo4j") as demo:
         outputs=output
     )
 
-demo.launch(favicon_path="dolphin.svg",inbrowser=True)
+demo.launch(favicon_path=get_resource_path("dolphin.ico"),inbrowser=True)
