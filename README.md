@@ -1,4 +1,4 @@
-# 📡 PCAP to Neo4j
+# 🐬 PCAP to Neo4j
 
 Some python that parses wifi packet capture (`.pcap`) files using **TShark**, extracts network metadata, and ingests the data into a local **Neo4j** graph database.
 
@@ -16,26 +16,25 @@ Some python that parses wifi packet capture (`.pcap`) files using **TShark**, ex
 
 ## 📦 Requirements
 
+- [Neo4j Desktop](https://neo4j.com/download/) or local Neo4j instance
+
+If building from source:
 - Python 3.7+
 - [TShark](https://www.wireshark.org/docs/man-pages/tshark.html)
-- [Neo4j Desktop](https://neo4j.com/download/) or local Neo4j instance
-- The following Python packages (listed in `requirements.txt`):
-
-```txt
-neo4j
-mac_vendor_lookup
-tqdm
-```
 
 ---
 
 ## 🚀 Getting Started
+
+Option 1 (Recommended): Download from releases, then run pcap_to_neo4j.exe.
+
+Option 2: Build from source: 
 1. Clone the Repository
   ```txt
   git clone https://github.com/IgnominiousHam/PCAPtoNeo4j.git
   cd PCAPtoNeo4j
   ```
-2. Create and Activate a Virtual Environment (Recommended)
+2. Create and Activate a Virtual Environment
 
     Create and activate .venv:
     On Windows:
@@ -56,30 +55,27 @@ tqdm
       ```txt
       pip install -r requirements.txt
       ```
-    You'll need to run the script in the virtual environment so hang out here until your credentials are set.
    
-4. Input Database Credentials
+4. Run
 
-    In main.py, change the following lines: 
+   Ensure that you're in the PCAPtoNeo4j directory and your virtual environment is still active, then enter the following:
     ```txt
-    neo4j_user = "neo4j" # Replace with your DB user
-    neo4j_password = ""  # Replace with your DB password
-    neo4j_input_dir = ""
+    python app.py
     ```
-    > In Neo4j Desktop, your input directory can be found by clicking the three dots next to "Open" > Open Folder > Import. 
-    
-    For Windows users, replace all "\\" in your path with "/"
-   ```txt
-    neo4j_input_dir = "C:/Users/User/.Neo4jDesktop/relate-data/dbmss/dbms-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/import"
-   ```
-5. Run
-  ```txt
-  python main.py
-  ```
 
 ---
 
-## 🧠 Recommended Use
+## 🛠 Using the Web UI
+ - Ensure that Neo4j database is started in the Neo4j Desktop app.
+ - If you don't know your credentials/haven't made a database, head into Neo4j Desktop and click Add > Local DBMS.
+ - Once your database has been started, you can check your import directory using the three dots in the top right, then Open Folder > Import. Paste the full file path into the field.
+ - Select desired pcaps to ingest.
+ - Name your mission. If importing pcaps for the same event, make sure you keep this consistent. Mission is designed as a way to correlate devices seen in multiple locations if you don't have GPS, so try to name it something intuitive (like place_date).
+ - Ingest takes a while, so be patient. If it works, you'll see a "✅ Successfully ingested..." message in the output section.
+
+---
+
+## 🧠 Recommended Queries
 In Neo4j Desktop, open Graph Apps, then choose **Neo4j Bloom**. This will let you perform dynamic queries without writing cypher, which is very nice because cypher can be pretty annoying.
 
 For viewing geolocations, you'll need to use **NeoDash**. Here are some snazzy queries for displaying map data:
@@ -110,16 +106,3 @@ WHERE point.withinBBox(
 RETURN d.name AS vendor, count(*) AS mac_count
 ```
 
----
-
-## 🛠 Troubleshooting
-
-- Make sure tshark is installed and available in your system’s PATH:
-```txt
-tshark -v
-```
-- Confirm that Neo4j is running and matches the URI in your main.py file.
-
-- Ensure that dependencies are properly installed (see steps 2 and 3).
-
----
