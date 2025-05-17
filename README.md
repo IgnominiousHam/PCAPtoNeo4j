@@ -56,13 +56,9 @@ tqdm
       ```txt
       pip install -r requirements.txt
       ```
-      
-    If everything installed properly, you're good to exit the environment:
-      ```txt
-      deactivate
-      ```
-
-5. Input Database Credentials
+    You'll need to run the script in the virtual environment so hang out here until your credentials are set.
+   
+4. Input Database Credentials
 
     In main.py, change the following lines: 
     ```txt
@@ -76,7 +72,7 @@ tqdm
    ```txt
     neo4j_input_dir = "C:/Users/User/.Neo4jDesktop/relate-data/dbmss/dbms-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/import"
    ```
-4. Run
+5. Run
   ```txt
   python main.py
   ```
