@@ -1,5 +1,4 @@
 from neo4j import GraphDatabase
-from tqdm import tqdm
 
 def ingest_csv_into_neo4j(filename, neo4j_url, neo4j_user, neo4j_password, mission_name):
     try:
@@ -320,7 +319,7 @@ def ingest_csv_into_neo4j(filename, neo4j_url, neo4j_user, neo4j_password, missi
         with driver.session() as session:
             for query in index_queries:
                 session.run(query)
-            for query in tqdm(queries, desc=f"Importing {filename}", unit="file"):
+            for query in queries:
                 session.run(query)
                 
         

@@ -2,7 +2,6 @@ import subprocess
 import csv
 import os
 from mac_vendor_lookup import MacLookup
-from tqdm import tqdm
 
 fields = [
     "ppi_gps.lat", "ppi_gps.lon", "wlan.fc.type_subtype",
@@ -56,7 +55,7 @@ def decode_ssid_column(input_csv):
         writer = csv.DictWriter(outfile, fieldnames=fieldnames)
         writer.writeheader()
 
-        for row in tqdm(reader, desc=f"Decoding SSIDs", unit=" packets"):
+        for row in reader:
             if "wlan.ssid" in row and row["wlan.ssid"]:
                 row["wlan.ssid"] = decode_hex(row["wlan.ssid"].strip())
             writer.writerow(row)
@@ -87,7 +86,7 @@ def add_vendor_columns(csv_file):
 
         writer = csv.DictWriter(outfile, fieldnames=fieldnames)
         writer.writeheader()
-        for row in tqdm(reader, desc=f"Performing vendor lookup", unit=" packets"):
+        for row in reader:
             # Lookup wlan.sa
             sa_mac = row.get("wlan.sa", "").strip()
             try:
