@@ -1,6 +1,7 @@
 import os
 import tempfile
 import shutil
+import urllib.parse
 from src.merge_pcaps import *
 from src.tshark_to_csv import *
 from src.csv_to_neo4j import *
@@ -33,8 +34,9 @@ def pcap_workflow(pcap_files, mission_name, neo4j_url, neo4j_user, neo4j_passwor
             #CSV to Neo4j
             neo4j_csv_path = os.path.join(neo4j_input_dir, mission_name + ".csv")
             shutil.copy(raw_csv, neo4j_csv_path)
+            filename = urllib.parse.quote(os.path.basename(neo4j_csv_path))
             ingest_csv_into_neo4j(
-                os.path.basename(neo4j_csv_path),
+                filename,
                 neo4j_url,
                 neo4j_user,
                 neo4j_password,

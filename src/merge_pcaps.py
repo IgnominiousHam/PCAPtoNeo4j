@@ -17,7 +17,5 @@ def merge_pcaps(pcap_files, output_file):
         return
 
     command = ['mergecap', '-w', output_file] + pcap_files
-    print(f"Merging {len(pcap_files)} files into {output_file}...")
     subprocess.run(command, check=True)
-    print("Merge complete.")
 

@@ -77,7 +77,7 @@ def add_vendor_columns(csv_file):
         mac_lookup.update_vendors()
     except Exception as e:
         print(f"Vendor database update failed: {e}")
-
+        pass
     temp_file = csv_file + ".tmp"
 
     with open(csv_file, "r", encoding="utf-8") as infile, \
