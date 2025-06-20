@@ -43,4 +43,4 @@ with gr.Blocks(theme=theme, title="PCAP → Neo4j") as demo:
         outputs=output
     )
 
-demo.launch(favicon_path=get_resource_path("dolphin.ico"),inbrowser=True)
+demo.launch(favicon_path=get_resource_path("dolphin.ico"),inbrowser=True, server_name="0.0.0.0", server_port=80)
