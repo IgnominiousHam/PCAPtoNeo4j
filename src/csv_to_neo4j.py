@@ -328,3 +328,13 @@ def ingest_csv_into_neo4j(filename, neo4j_url, neo4j_user, neo4j_password, missi
     finally:
         driver.close()
 
+def clear_neo4j_database(neo4j_url, neo4j_user, neo4j_password):
+    try:
+        driver = GraphDatabase.driver(neo4j_url, auth=(neo4j_user, neo4j_password))
+        with driver.session() as session:
+            session.run("MATCH (n) DETACH DELETE n")
+            return "✅ Database cleared successfully."
+    except Exception as e:
+        return f"❌ An error occurred while clearing the database:\n{str(e)}"
+    finally:
+        driver.close()

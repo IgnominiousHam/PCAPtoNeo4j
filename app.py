@@ -2,6 +2,7 @@ import gradio as gr
 from src.workflow import pcap_workflow
 import sys
 import os
+from src.csv_to_neo4j import clear_neo4j_database
 
 def get_resource_path(filename):
     if hasattr(sys, '_MEIPASS'):
@@ -40,6 +41,14 @@ with gr.Blocks(theme=theme, title="PCAP → Neo4j") as demo:
     submit.click(
         fn=pcap_workflow,
         inputs=[folder_input, mission, neo4j_url, neo4j_user, neo4j_password, neo4j_input_dir],
+        outputs=output
+    )
+    
+    clear = gr.Button("Clear Database")
+
+    clear.click(
+        fn=clear_neo4j_database,
+        inputs=[neo4j_url, neo4j_user, neo4j_password],
         outputs=output
     )
 
